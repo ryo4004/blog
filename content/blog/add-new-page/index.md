@@ -10,3 +10,5 @@ description: これは新しく追加したページです
 Lorem Ipsum
 
 ![画像のテスト](undou_ashibumi_man.png "画像のテストです")
+
+こんな感じ
