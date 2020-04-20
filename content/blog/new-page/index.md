@@ -9,6 +9,8 @@ description: これは新しく追加したページです2
 適当に本文を書いていきます
 Lorem Ipsum
 
+<span style='color:blue;'>あおいもじ</span>
+
 Lorem Ipsum
 Lorem Ipsum
 Lorem Ipsum
