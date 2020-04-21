@@ -68,6 +68,7 @@ exports.createPages = async ({ graphql, actions }) => {
               }
               frontmatter {
                 title
+                category
               }
             }
           }
@@ -80,12 +81,59 @@ exports.createPages = async ({ graphql, actions }) => {
     throw planets.errors
   }
 
-  // Create blog posts pages.
+  // Create planet posts pages.
   const planetPosts = planets.data.allMarkdownRemark.edges
 
   planetPosts.forEach((post, index) => {
     const previous = index === planetPosts.length - 1 ? null : planetPosts[index + 1].node
     const next = index === 0 ? null : planetPosts[index - 1].node
+
+    createPage({
+      path: post.node.fields.source + '' + post.node.fields.slug,
+      component: blogPost,
+      context: {
+        slug: post.node.fields.slug,
+        source: post.node.fields.source,
+        previous,
+        next,
+      },
+    })
+  })
+
+  const news = await graphql(
+    `
+      {
+        allMarkdownRemark(
+          filter: { fields: { source: { eq: "news" }}}
+          sort: { fields: [frontmatter___date], order: DESC }
+          limit: 1000
+        ) {
+          edges {
+            node {
+              fields {
+                slug
+                source
+              }
+              frontmatter {
+                title
+              }
+            }
+          }
+        }
+      }
+    `
+  )
+
+  if (news.errors) {
+    throw news.errors
+  }
+
+  // Create planet posts pages.
+  const newsPosts = news.data.allMarkdownRemark.edges
+
+  newsPosts.forEach((post, index) => {
+    const previous = index === newsPosts.length - 1 ? null : newsPosts[index + 1].node
+    const next = index === 0 ? null : newsPosts[index - 1].node
 
     createPage({
       path: post.node.fields.source + '' + post.node.fields.slug,
@@ -106,8 +154,6 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
   if (node.internal.type === `MarkdownRemark`) {
     const value = createFilePath({ node, getNode })
     const parent = getNode(node.parent)
-    console.log({value, parent})
-    // console.log(JSON.stringify(parent, undefined, 2))
     createNodeField({
       node,
       name: `slug`,
