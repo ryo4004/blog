@@ -45,13 +45,12 @@ exports.createPages = async ({ graphql, actions }) => {
       component: blogPost,
       context: {
         slug: post.node.fields.slug,
+        source: post.node.fields.source,
         previous,
         next,
       },
     })
   })
-
-  console.log(JSON.stringify(result, undefined, 2))
 
   const planets = await graphql(
     `
@@ -93,14 +92,12 @@ exports.createPages = async ({ graphql, actions }) => {
       component: blogPost,
       context: {
         slug: post.node.fields.slug,
+        source: post.node.fields.source,
         previous,
         next,
       },
     })
   })
-
-  // console.log(planets)
-  console.log(JSON.stringify(planets, undefined, 2))
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
