@@ -5,6 +5,8 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
+import "./index.scss"
+
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata.title
   const posts = data.allMarkdownRemark.edges
@@ -12,7 +14,7 @@ const BlogIndex = ({ data, location }) => {
   return (
     <Layout location={location} title={siteTitle}>
       <SEO title="All posts" />
-      <Bio />
+      <div className='index'>
       {posts.map(({ node }) => {
         const title = node.frontmatter.title || node.fields.slug
         return (
@@ -23,11 +25,12 @@ const BlogIndex = ({ data, location }) => {
                   marginBottom: 10,
                 }}
               >
-                <Link style={{ boxShadow: `none` }} to={node.fields.source + '/' + node.fields.slug}>
+                <Link style={{ boxShadow: `none` }} to={`/${node.fields.source}/${node.fields.slug}`}>
                   {title}
                 </Link>
               </h3>
               <small>{node.frontmatter.date}</small>
+              <div>{node.frontmatter.category}</div>
             </header>
             <section>
               <p
@@ -39,6 +42,8 @@ const BlogIndex = ({ data, location }) => {
           </article>
         )
       })}
+      </div>
+      <Bio />
     </Layout>
   )
 }
@@ -53,7 +58,6 @@ export const pageQuery = graphql`
       }
     }
     allMarkdownRemark(
-      filter: { fields: { source: { eq: "blog" }}}
       sort: { fields: [frontmatter___date], order: DESC }
     ) {
       edges {
@@ -67,6 +71,7 @@ export const pageQuery = graphql`
             date(formatString: "YYYY/MM/DD")
             title
             description
+            category
           }
         }
       }
