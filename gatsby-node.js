@@ -9,6 +9,7 @@ exports.createPages = async ({ graphql, actions }) => {
     `
       {
         allMarkdownRemark(
+          filter: { fields: { source: { eq: "blog" }}}
           sort: { fields: [frontmatter___date], order: DESC }
           limit: 1000
         ) {
@@ -16,6 +17,7 @@ exports.createPages = async ({ graphql, actions }) => {
             node {
               fields {
                 slug
+                source
               }
               frontmatter {
                 title
@@ -39,7 +41,7 @@ exports.createPages = async ({ graphql, actions }) => {
     const next = index === 0 ? null : posts[index - 1].node
 
     createPage({
-      path: post.node.fields.slug,
+      path: post.node.fields.source + '' + post.node.fields.slug,
       component: blogPost,
       context: {
         slug: post.node.fields.slug,
@@ -48,6 +50,57 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   })
+
+  console.log(JSON.stringify(result, undefined, 2))
+
+  const planets = await graphql(
+    `
+      {
+        allMarkdownRemark(
+          filter: { fields: { source: { eq: "planets" }}}
+          sort: { fields: [frontmatter___date], order: DESC }
+          limit: 1000
+        ) {
+          edges {
+            node {
+              fields {
+                slug
+                source
+              }
+              frontmatter {
+                title
+              }
+            }
+          }
+        }
+      }
+    `
+  )
+
+  if (planets.errors) {
+    throw planets.errors
+  }
+
+  // Create blog posts pages.
+  const planetPosts = planets.data.allMarkdownRemark.edges
+
+  planetPosts.forEach((post, index) => {
+    const previous = index === planetPosts.length - 1 ? null : planetPosts[index + 1].node
+    const next = index === 0 ? null : planetPosts[index - 1].node
+
+    createPage({
+      path: post.node.fields.source + '' + post.node.fields.slug,
+      component: blogPost,
+      context: {
+        slug: post.node.fields.slug,
+        previous,
+        next,
+      },
+    })
+  })
+
+  // console.log(planets)
+  console.log(JSON.stringify(planets, undefined, 2))
 }
 
 exports.onCreateNode = ({ node, actions, getNode }) => {
@@ -55,10 +108,18 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
 
   if (node.internal.type === `MarkdownRemark`) {
     const value = createFilePath({ node, getNode })
+    const parent = getNode(node.parent)
+    console.log({value, parent})
+    // console.log(JSON.stringify(parent, undefined, 2))
     createNodeField({
-      name: `slug`,
       node,
-      value,
+      name: `slug`,
+      value
+    })
+    createNodeField({
+      node,
+      name: 'source',
+      value: parent.sourceInstanceName,
     })
   }
 }

@@ -53,7 +53,7 @@ export const pageQuery = graphql`
       }
     }
     allMarkdownRemark(
-      filter: { fields: { source: { eq: "blog" }}}
+      filter: { fields: { source: { eq: "planets" }}}
       sort: { fields: [frontmatter___date], order: DESC }
     ) {
       edges {
