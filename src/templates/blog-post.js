@@ -5,18 +5,21 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import SEO from "../components/seo"
 
+import "./blog-post.scss"
+
 const BlogPostTemplate = ({ data, pageContext, location }) => {
   const post = data.markdownRemark
   const siteTitle = data.site.siteMetadata.title
   const { previous, next } = pageContext
 
+  console.log(data)
   return (
     <Layout location={location} title={siteTitle}>
       <SEO
         title={post.frontmatter.title}
         description={post.frontmatter.description || post.excerpt}
       />
-      <article>
+      <article className='blog-post'>
         <header>
           <h1
             style={{
@@ -26,14 +29,12 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
           >
             {post.frontmatter.title}
           </h1>
-          <p
-            style={{
-              display: `block`,
-              marginBottom: 60,
-            }}
-          >
+          <p>
             {post.frontmatter.date}
           </p>
+          <div className={`label ${post.fields.source}`}>
+            {post.fields.source}
+          </div>
         </header>
         <section dangerouslySetInnerHTML={{ __html: post.html }} />
         <hr
@@ -93,6 +94,9 @@ export const pageQuery = graphql`
         title
         date(formatString: "YYYY/MM/DD")
         description
+      }
+      fields {
+        source
       }
     }
   }

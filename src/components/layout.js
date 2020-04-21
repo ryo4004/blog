@@ -1,6 +1,8 @@
 import React from "react"
 import { Link } from "gatsby"
 
+import "./layout.scss"
+
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
   let header
@@ -44,18 +46,11 @@ const Layout = ({ location, title, children }) => {
     )
   }
   return (
-    <div
-      style={{
-        marginLeft: `auto`,
-        marginRight: `auto`,
-        maxWidth: 800,
-        padding: 60,
-      }}
-    >
-      <header>{header}</header>
+    <div className='layout'>
+      <header className='main-header'>{header}</header>
       <main>{children}</main>
-      <footer>
-        © {new Date().getFullYear()}, Built with
+      <footer className='main-footer'>
+        © {new Date().getFullYear()} ryo4004, Built with
         {` `}
         <a href="https://www.gatsbyjs.org">Gatsby</a>
       </footer>

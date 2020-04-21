@@ -1,5 +1,32 @@
 .index {
+  .featured {
+    padding: 8px 16px;
+    background: lightyellow;
+  }
+
+  .posts {
+    article:nth-child(even) {
+      background: #eee;
+    }
+  }
+
   a {
     color: skyblue;
+  }
+
+  .label {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 13px;
+    background: lightgray;
+
+    &.news {
+      background: palevioletred;
+    }
+    &.planets {
+      background: paleturquoise;
+    }
   }
 }

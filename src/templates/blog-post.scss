@@ -1,0 +1,14 @@
+.blog-post {
+  .label {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    background: lightgray;
+    &.news {
+      background: palevioletred;
+    }
+    &.planets {
+      background: paleturquoise;
+    }
+  }
+}
