@@ -1,0 +1,2 @@
+name: blog-test
+script: gatsby serve -p 9010
